@@ -13,44 +13,40 @@ import models.*;
 public class Security extends Secure.Security {
 
     /**
-     * Como ya tenemos los objetos User como parte del modelo del blog, es fácil
-     * implementar una versión de este método que valide el usuario y password
-     * correctamente.
-     *
+     * Autentifica
      * @param username
      * @param password
-     * @return
+     * @return 
      */
-    static boolean authenticate(String username, String password) {
+    static boolean authentify(String username, String password) {
         return User.connect(username, password) != null;
     }
-
+    
     /**
-     * La aplicación lo enviará de nuevo al formulario de inicio de sesión:
+     * Revisa un perfil
+     * @param profile
+     * @return 
+     */
+    static boolean check(String profile) {
+        if("admin".equals(profile)) {
+            return User.find("byEmail", connected()).<User>first().isAdmin;
+        }
+        return false;
+    }
+    
+    /**
+     * Abre el index
      */
     static void onDisconnected() {
         Application.index();
     }
-
+    
     /**
      * Redefine el metodo onAuthenticated
      */
     static void onAuthenticated() {
         Admin.index();
     }
-
-    /**
-     * El módulo secure no sólo provee manejo de autenticación sino tambien
-     * manejo de autorización, a través de los llamados perfiles (profiles).
-     *
-     * @param profile
-     * @return
-     */
-    static boolean check(String profile) {
-        if ("admin".equals(profile)) {
-            return User.find("byEmail", connected()).<User>first().isAdmin;
-        }
-        return false;
-    }
-
+    
 }
+

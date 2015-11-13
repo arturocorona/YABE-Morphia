@@ -1,11 +1,10 @@
 package models;
  
-import java.util.*;
-import javax.persistence.*;
+import com.google.code.morphia.annotations.Entity;
 import play.data.validation.Email;
 import play.data.validation.Required;
+import play.modules.morphia.Model;
  
-import play.db.jpa.*;
  
 /**
  * Clase-entidad para modelar la información de los usuarios.
@@ -13,7 +12,7 @@ import play.db.jpa.*;
  */
 @Entity
 public class User extends Model {
-
+ 
     @Email
     @Required
     public String email;
@@ -22,6 +21,7 @@ public class User extends Model {
     public String password;
     
     public String fullname;
+    
     public boolean isAdmin;
     
     /**
@@ -45,9 +45,14 @@ public class User extends Model {
     public static User connect(String email, String password) {
         return find("byEmailAndPassword", email, password).first();
     }
-
+    
+    /**
+     * Regresa el email
+     * @return 
+     */
+    @Override
     public String toString() {
         return email;
     }
-    
+ 
 }
