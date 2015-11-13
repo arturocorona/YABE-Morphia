@@ -1,11 +1,10 @@
 #{extends 'admin.html' /}
 #{set 'moreStyles'}
-    <link rel="stylesheet" type="text/css" media="screen" 
-        href="@{'/public/stylesheets/crud.css'}" />
+    <link rel="stylesheet" type="text/css" media="screen" href="@{'/public/stylesheets/crud.css'}" />
 #{/set}
- 
+
 <div id="crud">
- 
+
     #{if flash.success}
     	<div class="crudFlash flashSuccess">
     		${flash.success}
@@ -16,9 +15,9 @@
     		${error ?: flash.error}
     	</div>
     #{/if}
- 
+
     <div id="crudContent">
     	#{doLayout /}
     </div>
- 
+
 </div>

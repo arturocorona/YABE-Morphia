@@ -1,39 +1,39 @@
 package controllers;
- 
-import java.util.List;
-import models.Post;
-import play.Play;
-import play.cache.Cache;
-import play.data.validation.Required;
-import play.libs.Codec;
-import play.libs.Images;
+
+import play.*;
 import play.mvc.*;
- 
+import play.data.validation.*;
+import play.libs.*;
+import play.cache.*;
+import java.util.*;
+import models.*;
+
+/**
+ * controlador principal
+ * @author arturo
+ */
 public class Application extends Controller {
- 
-    /**
-     * Método index.
-     */
-    public static void index() {
-        Post frontPost = Post.find("order by postedAt desc").first();
-        List<Post> olderPosts = Post.find(
-            "order by postedAt desc"
-        ).from(1).fetch(10);
-        render(frontPost, olderPosts);
-    }
     
     /**
-     * Método que añade las variables blogTitle y blogBaseline que seran 
-     * deplegadas en la vista.
+     * Intersector que agrega defaults
      */
     @Before
     static void addDefaults() {
         renderArgs.put("blogTitle", Play.configuration.getProperty("blog.title"));
         renderArgs.put("blogBaseline", Play.configuration.getProperty("blog.baseline"));
     }
-
+ 
     /**
-     * Metodo que renderiza la vista Show
+     * Metodo index
+     */
+    public static void index() {
+        Post frontPost = Post.q().order("-postedAt").first();
+        List<Post> olderPosts = Post.q().order("-postedAt").from(1).fetch(10);
+        render(frontPost, olderPosts);
+    }
+    
+    /**
+     * Metodo show
      * @param id 
      */
     public static void show(Long id) {
@@ -43,32 +43,23 @@ public class Application extends Controller {
     }
     
     /**
-     * Método que renderiza la listTagged
-     * @param tag 
-     */
-    public static void listTagged(String tag) {
-        List<Post> posts = Post.findTaggedWith(tag);
-        render(tag, posts);
-    }
-    
-    /**
-     * Método que agrega un nuevo comentario a un Post.
+     * Agrega un comentario
      * @param postId
      * @param author
-     * @param content 
+     * @param content
+     * @param code
+     * @param randomID 
      */
     public static void postComment(
-            Long postId, 
-            @Required(message="Author is required") String author, 
-            @Required(message="A message is required") String content, 
-            @Required(message="Please type the code") String code, 
-            String randomID) 
+        Long postId, 
+        @Required(message="Author is required") String author, 
+        @Required(message="A message is required") String content, 
+        @Required(message="Please type the code") String code, 
+        String randomID) 
     {
         Post post = Post.findById(postId);
         if(!Play.id.equals("test")) {
-            validation.equals(
-                code, Cache.get(randomID)
-            ).message("Invalid code. Please type it again");
+            validation.equals(code, Cache.get(randomID)).message("Invalid code. Please type it again");
         }
         if(validation.hasErrors()) {
             render("Application/show.html", post, randomID);
@@ -79,11 +70,24 @@ public class Application extends Controller {
         show(postId);
     }
     
+    /**
+     * Agrega codigo captcha
+     * @param id 
+     */
     public static void captcha(String id) {
-    Images.Captcha captcha = Images.captcha();
-    String code = captcha.getText("#E4EAFD");
-    Cache.set(id, code, "10mn");
-    renderBinary(captcha);
+        Images.Captcha captcha = Images.captcha();
+        String code = captcha.getText("#E4EAFD");
+        Cache.set(id, code, "30mn");
+        renderBinary(captcha);
     }
     
+    /**
+     * Agrega tags
+     * @param tag 
+     */
+    public static void listTagged(String tag) {
+        List<Post> posts = Post.findTaggedWith(tag);
+        render(tag, posts);
+    }
+ 
 }
