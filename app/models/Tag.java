@@ -1,46 +1,17 @@
 package models;
  
-import java.util.*;
-import javax.persistence.*;
-import play.data.validation.Required;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
  
-import play.db.jpa.*;
-
-/**
- * Clase-Entidad para etiquetar los Post.
- * @author arturo
- */
-@Entity
-public class Tag extends Model implements Comparable<Tag> {
+public class Tag {
  
-    @Required
-    public String name;
- 
-    private Tag(String name) {
-        this.name = name;
-    }
- 
-    public String toString() {
-        return name;
-    }
- 
-    public int compareTo(Tag otherTag) {
-        return name.compareTo(otherTag.name);
+    public static Map<String, Long> getCloud() {
+        return Post._cloud("tags");
     }
     
-    public static Tag findOrCreateByName(String name) {
-        Tag tag = Tag.find("byName", name).first();
-        if(tag == null) {
-            tag = new Tag(name);
-        }
-        return tag;
+    public static List<String> findAll() {
+        return new ArrayList(Post._distinct("tags"));
     }
-        
-public static List<Map> getCloud() {
-    List<Map> result = Tag.find(
-        "select new map(t.name as tag, count(p.id) as pound) from Post p join p.tags as t group by t.name order by t.name"
-    ).fetch();
-    return result;
-}
     
 }

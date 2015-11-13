@@ -1,14 +1,7 @@
 # You can specialize this file for each language.
-# For example, for French create a messages.fr file
+# For exemple, for french create a messages.fr file
 #
 
-nombre = Nombre
-aPaterno = Apellido Paterno
-aMaterno = Apellido Materno
-password = Contraseña
-fechaNacimiento = Fecha de Nacimiento
-
-#etiquetas
 title=Title
 content=Content
 postedAt=Posted at
@@ -21,7 +14,6 @@ password=Password
 fullname=Full name
 isAdmin=User is admin
 
-#secure
 secure.username=Your email:
 secure.password=Your password:
 secure.signin=Log in now
