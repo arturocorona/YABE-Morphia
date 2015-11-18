@@ -138,9 +138,6 @@ public class Post extends Model {
      * Elimina comentarios
      */
     @OnDelete void cascadeDelete() {
-//        comments.stream().forEach((c) -> {
-//            c.delete();
-//        });
     }
 
 }
