@@ -138,6 +138,6 @@ public class Post extends Model {
      * Elimina comentarios
      */
     @OnDelete void cascadeDelete() {
-    }
+        }
 
 }
